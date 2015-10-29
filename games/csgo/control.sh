@@ -3,7 +3,6 @@
 # Server Management Script
 # Author: Daniel Gibbs
 # Website: http://danielgibbs.co.uk
-# Version: 210115
 
 #### Variables ####
 
@@ -34,6 +33,8 @@ port="{{port}}"
 sourcetvport="{{sourcetvport}}"
 clientport="{{clientport}}"
 ip="{{ip}}"
+updateonstart="no"
+
 # Optional: Workshop Parameters
 # https://developer.valvesoftware.com/wiki/CSGO_Workshop_For_Server_Operators
 # To get an authkey visit - http://steamcommunity.com/dev/apikey
@@ -57,7 +58,7 @@ gamename="Counter Strike: Global Offensive"
 engine="source"
 
 # Directories
-rootdir="$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd )"
+rootdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 selfname="$(basename $0)"
 lockselfname=".${servicename}.lock"
 filesdir="${rootdir}/serverfiles"
@@ -67,7 +68,7 @@ executable="./srcds_run"
 servercfgdir="${systemdir}/cfg"
 servercfg="${servicename}.cfg"
 servercfgfullpath="${servercfgdir}/${servercfg}"
-defaultcfg="${servercfgdir}/server.cfg"
+servercfgdefault="${servercfgdir}/server.cfg"
 backupdir="${rootdir}/backups"
 
 # Server Details
@@ -99,10 +100,9 @@ if [ ! -f "${rootdir}/functions/${functionfile}" ]; then
 	fi
 	cd functions
 	echo -e "loading ${functionfile}...\c"
-	wget -N --no-check-certificate /dev/null https://raw.githubusercontent.com/dgibbs64/linuxgsm/master/functions/${functionfile} 2>&1 | grep -F HTTP | cut -c45-
+	wget -N /dev/null https://raw.githubusercontent.com/dgibbs64/linuxgsm/master/functions/${functionfile} 2>&1 | grep -F HTTP | cut -c45-
 	chmod +x "${functionfile}"
 	cd "${rootdir}"
-	sleep 1
 fi
 source "${rootdir}/functions/${functionfile}"
 }
